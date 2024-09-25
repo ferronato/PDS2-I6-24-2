@@ -35,7 +35,6 @@ public class LoginController {
 
 		if (perfil != null) {
 			JOptionPane.showMessageDialog(null, "Usuário poderá acessar o sistema");
-			model.fecharConexao();
 		} else {
 			JOptionPane.showMessageDialog(null, "Login ou Senha Inválidos!");
 		}
