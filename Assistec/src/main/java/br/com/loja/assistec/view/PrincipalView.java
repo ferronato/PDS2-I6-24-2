@@ -23,7 +23,7 @@ public class PrincipalView extends javax.swing.JFrame {
 	private JMenuItem menuSobre;
 	private JMenuItem menuUsuariosCadastrar;
 
-	public PrincipalView(String user, String perfil) {
+	public PrincipalView() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Sistema de Gestão - Tela Principal");
 		setBounds(100, 100, 541, 358);
@@ -87,31 +87,12 @@ public class PrincipalView extends javax.swing.JFrame {
 
 		pack();
 
-		if ("admin".equals(perfil)) {
-			MenuRelatorio.setEnabled(true);
-			MenuUsuarios.setEnabled(true);
-		}
-		lblUsuario.setText(user);
+		
 
-		menuUsuariosCadastrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				try {
-					listarUsuarios();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} // Método para abrir a tela de cadastro
-			}
-		});
 
 	}
 
-	protected void listarUsuarios() throws SQLException {
-		ListarUsuariosView frame = new ListarUsuariosView();
-		frame.setLocationRelativeTo(frame);
-		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		frame.setVisible(true);
-	}
+
 
 	private void menuSairActionPerformed(java.awt.event.ActionEvent evt) {
 		int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Atenção",
