@@ -11,6 +11,11 @@ public class LoginDAO extends GenericDAO{
 	public Boolean bancoOnline()  {
 		Connection valor = conectarDAO();
 		if (valor != null){
+			try {
+				conectarDAO().close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			return true;
 		} else
 			return false;
