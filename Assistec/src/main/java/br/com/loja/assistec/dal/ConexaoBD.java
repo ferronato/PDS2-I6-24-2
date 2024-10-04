@@ -13,7 +13,7 @@ public class ConexaoBD {
 	private static final String PASSWORD = "aluno";
 
 	// método para estabelecer conexão com o BD
-	public static Connection getConnection() {
+	public static Connection conectar() {
 
 		// Estabelecer a conexao com o DB
 		try {
@@ -25,6 +25,14 @@ public class ConexaoBD {
 			e.getMessage();
 		}
 		return null;
+	}
+	
+	public void desconectar(Connection conexao) {
+		try {
+			conexao.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
