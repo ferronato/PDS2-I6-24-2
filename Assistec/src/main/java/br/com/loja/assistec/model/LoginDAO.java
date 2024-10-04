@@ -5,50 +5,42 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LoginDAO extends GenericDAO {
-
-
-	public Boolean bancoOnline() {
-		Connection valor = getConnection();
+public class LoginDAO extends GenericDAO{
+	
+	//Método para verificar se o banco esta online
+	public Boolean bancoOnline()  {
+		Connection valor = conectarDAO();
 		if (valor != null){
 			return true;
 		} else
 			return false;
 	}
-
-	// Aqui vai o método autenticar
-	public Usuario autenticar(String login, String senha) {
-		String sql = "SELECT * FROM usuarios WHERE login=? AND senha=?";
+	
+	
+	// Método para autenticar usuários
+	public Usuario autenticar(String login, String senha) throws SQLException {
+		String sql = "SELECT * FROM USUARIOS WHERE login=? AND senha=?";
 		Usuario usuario = null;
-		PreparedStatement pstm;
-		try {
-			pstm = getConnection().prepareStatement(sql);
-			pstm.setString(1, login);
-			pstm.setString(2, senha);
+		PreparedStatement stmt = conectarDAO().prepareStatement(sql);
 
-			ResultSet rs = pstm.executeQuery();
+		stmt.setString(1, login);
+		stmt.setString(2, senha);
+		ResultSet rs = stmt.executeQuery();
 
-			while (rs.next()) {
-				usuario = new Usuario();
-				usuario.setIduser(rs.getInt("iduser"));
-				usuario.setNome(rs.getString("nome"));
-				usuario.setFone(rs.getString("fone"));
-				usuario.setLogin(rs.getString("login"));
-				usuario.setSenha(rs.getString("senha"));
-				usuario.setPerfil(rs.getString("perfil"));
-			}
-
-			rs.close();
-			pstm.close();
-			getConnection().close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Catch LoginDAO");
-			e.printStackTrace();
+		while (rs.next()) {
+			usuario = new Usuario();
+			usuario.setIduser(rs.getInt("iduser"));
+			usuario.setNome(rs.getString("nome"));
+			usuario.setFone(rs.getString("fone"));
+			usuario.setLogin(rs.getString("login"));
+			usuario.setSenha(rs.getString("senha"));
+			usuario.setPerfil(rs.getString("perfil"));
 		}
 
+		rs.close();
+		stmt.close();
+		conectarDAO().close();
+
 		return usuario;
-
 	}
-
 }
