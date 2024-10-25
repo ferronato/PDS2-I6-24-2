@@ -1,5 +1,12 @@
 package br.com.loja.assistec.view;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -9,91 +16,113 @@ import javax.swing.JOptionPane;
 
 public class PrincipalView extends JFrame {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	public static JMenu MenuRelatorio;
-	public static JMenu MenuCadastroUsuarios;
-	public static JLabel lblUsuario;
-	private JMenuBar menuBar;
-	private JMenu menuArquivo;
-	private JMenuItem menuSair;
-	private JMenu menuAjuda;
-	private JMenuItem menuSobre;
 
-	public PrincipalView() {
-		initComponents();
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					PrincipalView frame = new PrincipalView(null, null);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
-	public void initComponents() {
-		lblUsuario = new JLabel();
-		menuBar = new JMenuBar();
-		menuArquivo = new JMenu();
-		menuSair = new JMenuItem();
-		MenuCadastroUsuarios = new JMenu();
-		MenuRelatorio = new JMenu();
-		menuAjuda = new JMenu();
-		menuSobre = new JMenuItem();
-
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		setTitle("Sistema de Gestão - Tela Principal");
-		setResizable(false);
-
-		lblUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-		lblUsuario.setText("Usuário");
-
-		// Configurando Menu "Arquivo"
-		menuArquivo.setText("Arquivo");
-
-		menuSair.setText("Sair");
-		menuSair.addActionListener(evt -> menuSairActionPerformed(evt));
-		menuArquivo.add(menuSair);
-
-		menuBar.add(menuArquivo);
-
-		// Configurando Menu "Cadastro de Usuários"
-		MenuCadastroUsuarios.setText("Cadastro de Usuários");
-		MenuCadastroUsuarios.setEnabled(false); // Desabilitado por padrão para usuários não administradores
-		menuBar.add(MenuCadastroUsuarios);
-
-		// Configurando Menu "Relatórios"
-		MenuRelatorio.setText("Relatórios");
-		MenuRelatorio.setEnabled(false); // Desabilitado por padrão para usuários não administradores
-		menuBar.add(MenuRelatorio);
-
-		// Configurando Menu "Ajuda"
-		menuAjuda.setText("Ajuda");
-
-		menuSobre.setText("Sobre");
-		menuSobre.addActionListener(evt -> menuSobreActionPerformed(evt));
-		menuAjuda.add(menuSobre);
-
-		menuBar.add(menuAjuda);
-
+	public PrincipalView(String user, String perfil) {
+		setTitle("Sistema de Gestão ASSISTEC");
+		setBounds(100, 100, 450, 300);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JLabel lblUsuario = new JLabel("");
+		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblUsuario)
+					.addContainerGap(378, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(214, Short.MAX_VALUE)
+					.addComponent(lblUsuario)
+					.addContainerGap())
+		);
+		getContentPane().setLayout(groupLayout);
+		
+		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-
-		// Layout do JFrame
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(layout.createSequentialGroup().addGap(30, 30, 30).addComponent(lblUsuario)
-						.addContainerGap(330, Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(layout.createSequentialGroup().addGap(30, 30, 30).addComponent(lblUsuario)
-						.addContainerGap(250, Short.MAX_VALUE)));
-
-		pack();
-		setLocationRelativeTo(null);
-	}
-
-	private void menuSairActionPerformed(java.awt.event.ActionEvent evt) {
-		int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Atenção",
-				JOptionPane.YES_NO_OPTION);
-		if (sair == JOptionPane.YES_OPTION) {
-			System.exit(0);
+		
+		JMenu menuArquivo = new JMenu("Arquivo");
+		menuBar.add(menuArquivo);
+		
+		JMenuItem menuSair = new JMenuItem("Sair");
+		menuSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int sair = JOptionPane.showConfirmDialog(null, 
+						"Tem certeza que deseja sair?",
+						"Atenção", JOptionPane.YES_NO_OPTION);
+				if(sair == 0) {
+					System.exit(0);
+				}
+			}
+		});
+		menuArquivo.add(menuSair);
+		
+		JMenu menuCadastro = new JMenu("Cadastro");
+		menuCadastro.setEnabled(false);
+		menuBar.add(menuCadastro);
+		
+		JMenuItem menuUsuarios = new JMenuItem("Usuários");
+		menuUsuarios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					listarUsuarios();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		menuCadastro.add(menuUsuarios);
+		
+		JMenu menuRelatorio = new JMenu("Relatórios");
+		menuRelatorio.setEnabled(false);
+		menuBar.add(menuRelatorio);
+		
+		JMenu menuAjuda = new JMenu("Ajuda");
+		menuBar.add(menuAjuda);
+		
+		JMenuItem menuSobre = new JMenuItem("Sobre");
+		menuSobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,
+						"Sistema de gestão Assistec - Versão 1.0");
+				
+			}
+		});
+		menuAjuda.add(menuSobre);
+		
+		lblUsuario.setText(user);
+		
+		if("Admin".equalsIgnoreCase(perfil)) {
+			menuCadastro.setEnabled(true);
+			menuRelatorio.setEnabled(true);
 		}
+
 	}
 
-	private void menuSobreActionPerformed(java.awt.event.ActionEvent evt) {
-		JOptionPane.showMessageDialog(null, "Sistema de Gestão - Versão 1.0");
+	protected void listarUsuarios() throws SQLException {
+		ListarUsuariosView frame = new ListarUsuariosView();
+		frame.setLocationRelativeTo(frame);
+		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		frame.setVisible(true);
 	}
-
 }
