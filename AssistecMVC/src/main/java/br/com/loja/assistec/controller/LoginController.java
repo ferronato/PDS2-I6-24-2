@@ -40,7 +40,11 @@ public class LoginController {
 		view.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				view.mostrarBancoOnline(dao.bancoOnline());
+				try {
+					view.mostrarBancoOnline(dao.bancoOnline());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 
 			@Override
